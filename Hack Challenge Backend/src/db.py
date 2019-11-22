@@ -6,12 +6,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-# association_table = db.Table('association', db.Model.metadata,
-#     db.Column('course_id', db.Integer, db.ForeignKey('course.id')),
-#     db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
-# )
 
-
+association_table = db.Table('association', db.Model.metadata,
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('event_id', db.Integer, db.ForeignKey('event.id'))
+)
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -21,6 +20,7 @@ class User(db.Model):
     year = db.Column(db.String, nullable = False)
     bio = db.Column(db.String, nullable = False)
     looking_for_buddy = db.Column(db.String, nullable = False)  
+    events_owned = db.Column( )
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name', '')
@@ -49,7 +49,8 @@ class Event(db.Model):
     name = db.Column(db.String, nullable=False)
     time = db.Column(db.String, nullable = False)
     location = db.Column(db.String, nullable = False)
-    host = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    host = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False) 
+    guests = db.Column(db.Integer, )
 
 
     def __init__(self, **kwargs):

@@ -75,49 +75,30 @@ def create_dinner_event(user_id):
     db.session.commit()
     return json.dumps({'success': True, 'data':event.serialize()}), 200
 
+@app.route('api/users/<int:user_id>/join_event<int:event_id>', methods = ['POST'])
+def join_dinner_event(user_id, event_id): 
+    user = User.query.filter_by(id = user_id).first()
+    if not user: 
+        return json.dumps({'success': False, 'error': 'User not found!'}), 404
+    
+    event = Event.query.filter_by(id = event_id).first()
+
+    if not event: 
+        return json.dumps({'success': False, 'error': 'Event not found!'})
 
 
+    event.attendees.append(user)
 
+    return json.dumps({'success': True, 'user': user.serialize()}), 200 
 
-
-# @app.route('/api/user/<int:user_id>/')
-# def get_user(user_id):
-#     user = User.query.filter_by(id=user_id).first()
-#     if not user:
-#         return json.dumps({'success': False, 'error':'User not found!'}), 404
-#     return json.dumps({'success': True, 'data':user.serialize()}), 200
-
-
-# @app.route('/api/course/<int:course_id>/add/', methods = ['POST'])
-# def add_user(course_id):
-#     course = Course.query.filter_by(id = course_id).first()
-#     if not Course:
-#         return json.dumps({'success': False, 'error':'Course not found!'}), 404
-
-#     post_body = json.loads(request.data)
-#     type = post_body.get('type')
-#     user_id = post_body.get('user_id')
-#     user = User.query.filter_by(id=user_id).first()
-#     if not user:
-#         return json.dumps({'success': False, 'error':'User not found!'}), 404
-
-#     if type == 'instructor':
-#         course.users.append(user)
-#         user.courses.append(course)
-#         course.instructors.append(user)
-#         db.session.commit()
-#         return json.dumps({'success': True, 'data':course.serialize()}), 200
-
-#     if type == 'student':
-#         course.users.append(user)
-#         user.courses.append(course)
-#         course.students.append(user)
-#         db.session.commit()
-#         return json.dumps({'success': True, 'data':course.serialize()}), 200
-#     else:
-#         return json.dumps({'success': False, 'error':'Invalid User Type!'}), 404
-
-
+# @app.route('api/users/<int:event_id>/delete_event', methods = ['DELETE'])
+# def delete_dinner_event(event_id): 
+#     event = Event.query.filter_by(id = event_id).first()
+#     if not event: 
+#         return json.dumps({'success': False, 'error': 'Event not found!'})
+    
+    
+    
 
 
 # @app.route('/api/course/<int:course_id>/assignment/', methods = ['POST'])
