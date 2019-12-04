@@ -74,6 +74,7 @@ class Event(db.Model):
         self.location = kwargs.get('location', '')
         self.host = []
         self.guests = []
+        
 
 
     def serialize(self):
