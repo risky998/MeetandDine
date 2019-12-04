@@ -80,10 +80,11 @@ def create_dinner_event(user_id):
     db.session.commit()
     return json.dumps({'success': True, 'data':event.serialize()}), 200
 
+
 @app.route('/api/users/<int:user_id>/join_event/<int:event_id>', methods = ['POST'])
 def join_dinner_event(user_id, event_id):
-    user = User.query.filter.by(id = user.id).first()
-    event = Event.query.filter.by(id = event.id).first()
+    user = User.query.filter.by(id = user_id).first()
+    event = Event.query.filter.by(id = event_id).first()
 
     if not user:
         return json.dumps({'success': False, 'error':'User not found!'}), 404
@@ -95,57 +96,36 @@ def join_dinner_event(user_id, event_id):
     user.events_attending.append(event)
     db.session.commit()
 
-    return json.dumps({'success, user added to event': True, 'data':event.serialize()}), 200
+    return json.dumps({'success': True, 'data':event.serialize()}), 200
 
 
 
-
-# @app.route('api/users/<int:user_id>/join_event<int:event_id>', methods = ['POST'])
-# def join_dinner_event(user_id, event_id): 
-#     user = User.query.filter_by(id = user_id).first()
-#     if not user: 
-#         return json.dumps({'success': False, 'error': 'User not found!'}), 404
+#get users attending a particular event 
+#get events by user
+@app.route('/api/users/events/<int:event_id>', methods = ['GET'])
+def get_event_details(event_id): 
+    event = Event.query.filter_by(id=event.id).first()
+    if not event: 
+        return json.dumps({'success': False, 'error':'Event not found!'}), 404
     
-#     event = Event.query.filter_by(id = event_id).first()
-
-#     if not event: 
-#         return json.dumps({'success': False, 'error': 'Event not found!'})
+    return json.dumps({'success': True, 'event_host': [u.alt_serialize() for u in event.host], 'event_guests': [g.alt_serialize() for g in event.guests]})
 
 
-#     event.attendees.append(user)
+@app.route('/api/users/<int:user_id>/hosting', methods = ['GET'])
+def get_hosting_events(user_id):
+    user = User.query.filter_by(id = user_id).first()
+    if not user:
+        return json.dumps({'success': False, 'error':'User not found!'}), 404
 
-#     return json.dumps({'success': True, 'user': user.serialize()}), 200 
+    return json.dumps({'success': True, 'data':[u.alt_serialize() for u in user.events_hosting]}), 200
 
-# @app.route('api/users/<int:event_id>/delete_event', methods = ['DELETE'])
-# def delete_dinner_event(event_id): 
-#     event = Event.query.filter_by(id = event_id).first()
-#     if not event: 
-#         return json.dumps({'success': False, 'error': 'Event not found!'})
+@app.route('/api/users/<int:user_id>/hosting', methods = ['GET'])
+def get_attending_events(user_id):
+    user = User.query.filter_by(id = user_id).first()
+    if not user:
+        return json.dumps({'success': False, 'error':'User not found!'}), 404
     
-    
-    
-
-
-# @app.route('/api/course/<int:course_id>/assignment/', methods = ['POST'])
-# def create_assignment(course_id):
-#     course = Course.query.filter_by(id=course_id).first()
-#     if not course:
-#         return json.dumps({'success': False, 'error':'Course not found!'}), 404
-
-#     post_body = json.loads(request.data)
-#     title = post_body.get('title', '')
-#     due_date = post_body.get('due_date', '')
-#     course_id = course_id
-
-#     assignment = Assignment(
-#         title = title,
-#         due_date = due_date,
-#         course = course_id
-#     )
-#     course.assignments.append(assignment)
-#     db.session.add(assignment)
-#     db.session.commit()
-#     return json.dumps({'success': True, 'data':assignment.serialize()}), 200
+    return json.dumps({'success': True, 'data':[u.alt_serialize() for u in user.events_attending]}), 200
 
 
 
