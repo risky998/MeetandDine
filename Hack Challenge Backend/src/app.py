@@ -75,7 +75,7 @@ def create_dinner_event(user_id):
     db.session.commit()
     return json.dumps({'success': True, 'data':event.serialize()}), 200
 
-@app.route('api/users/<int:user_id>/join_event<int:event_id>', methods = ['POST'])
+@app.route('/api/users/<int:user_id>/join_event<int:event_id>', methods = ['POST'])
 def join_dinner_event(user_id, event_id): 
     user = User.query.filter_by(id = user_id).first()
     if not user: 
