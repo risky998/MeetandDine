@@ -129,7 +129,32 @@ def get_attending_events(user_id):
 
 
 
+#get users attending a particular event 
+#get events by user
+@app.route('/api/users/events/<int:event_id>', methods = ['GET'])
+def get_event_details(event_id): 
+    event = Event.query.filter_by(id=event.id).first()
+    if not event: 
+        return json.dumps({'success': False, 'error':'Event not found!'}), 404
+    
+    return json.dumps({'success': True, 'event_host': [u.alt_serialize() for u in event.host], 'event_guests': [g.alt_serialize() for g in event.guests]})
 
+
+@app.route('/api/users/<int:user_id>/hosting', methods = ['GET'])
+def get_hosting_events(user_id):
+    user = User.query.filter_by(id = user_id).first()
+    if not user:
+        return json.dumps({'success': False, 'error':'User not found!'}), 404
+
+    return json.dumps({'success': True, 'data':[u.alt_serialize() for u in user.events_hosting]}), 200
+
+@app.route('/api/users/<int:user_id>/hosting', methods = ['GET'])
+def get_attending_events(user_id):
+    user = User.query.filter_by(id = user_id).first()
+    if not user:
+        return json.dumps({'success': False, 'error':'User not found!'}), 404
+    
+    return json.dumps({'success': True, 'data':[u.alt_serialize() for u in user.events_attending]}), 200
 
 
 
