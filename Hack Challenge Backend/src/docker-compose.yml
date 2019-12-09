@@ -1,6 +1,7 @@
 version: '3'
 services: 
         pa5: 
-            image: soupsoup123/pa5
+            image: soupsoup123/hackchallenge
+
             ports:
                 - "5000:5000"
